@@ -1,0 +1,20 @@
+# Автозапуск на Linux-сервере (systemd).
+# 1) Положи папку с ботом в /opt/life_bot  2) создай пользователя: sudo useradd -r -m lifebot
+# 3) sudo chown -R lifebot /opt/life_bot
+# 4) sudo cp life-bot.service /etc/systemd/system/ && sudo systemctl daemon-reload
+# 5) sudo systemctl enable --now life-bot      Логи: journalctl -u life-bot -f
+[Unit]
+Description=Personal life assistant bot (Telegram)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lifebot
+WorkingDirectory=/opt/life_bot
+ExecStart=/usr/bin/python3 /opt/life_bot/bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
